@@ -1,30 +1,59 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { setUser, setLogin } from '../actions/index';
+import {auth} from '../utils/firebase';
 import Form from '../components/Form';
 
-const Dashboard = () => (
-    <div className="Dashboard">
-        <div className="Dashboard-container">
-            <div className="Dashboard-content">
+const Dashboard = props => {
 
-                <div className="Dashboard-form">
-                    <Form />
-                </div>
-                <div className="Dashboard-profile">
-                    <h2>Perfil</h2>
-                    <div className="Dashboard-profile-info">
-                        <img src="/" alt="Nombre de Usuario" />
-                        <span>Nombre: </span>
-                        <h4>Alfredo Valbuena</h4>
-                        <span>Correo: </span>
-                        <h4>almavalo11@gmail.com</h4>
-                        <button>Cerrar Sesion</button>
+    const logoutFacebook = () => {
+        auth().signOut()
+        .then(() => {
+            props.setUser({});
+            props.setLogin(false);
+            props.history.push('/');
+            console.log('cerrar sesion')
+        });
+    }
+
+
+    return(
+        <div className="Dashboard">
+            <div className="Dashboard-container">
+                <div className="Dashboard-content">
+
+                    <div className="Dashboard-form">
+                        <Form />
+                    </div>
+                    <div className="Dashboard-profile">
+                        <h2>Perfil</h2>
+                        <div className="Dashboard-profile-info">
+                            <div>
+                                <img src={props.user.photoURL} alt={props.user.displayName} />
+                                <span>Nombre: </span>
+                                <h4>{props.user.displayName}</h4>
+                                <span>Correo: </span>
+                                <h4>{props.user.email}</h4>
+                                <button onClick={logoutFacebook}>
+                                    <span>Cerrar Sesion</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
+    );
+}
+const mapDispatchToProps = {
+    setUser,
+    setLogin,
+}
 
-    </div>
-);
+const mapStateToProps = state => {
+    return {
+        user: state.user
+    };
+};
 
-export default Dashboard;
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

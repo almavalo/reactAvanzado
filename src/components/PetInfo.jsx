@@ -10,7 +10,7 @@ const PetInfo = props => {
                     </div>
 
                     <div className="PetInfo-profile">
-                        <h2>Nombre</h2>
+                        <h2>{props.pet.name}</h2>
                         <span>
                             {props.pet.type === 'dog' && '🐶'}
                             {props.pet.type === 'cat' && '🐱'}
